@@ -1,7 +1,7 @@
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class HangmanGame {
+public class HangmanGame extends GameUI {
     private Scanner scanner = new Scanner(System.in);
     private Languages language;
     private Dictionary dictionary;
@@ -18,8 +18,6 @@ public class HangmanGame {
         this.totalAttemps = 5;
     }
 
-
-
     public String generateRandomWord() throws FileNotFoundException {
         return dictionary.generateRandomWord().toLowerCase();
     }
@@ -27,7 +25,6 @@ public class HangmanGame {
     public boolean isCorrectGuess(Character character) {
         return word.indexOf(character) >= 0;
     };
-
 
     public String getMaskaredWords(String word) {
         ArrayList<Character> maskared = new ArrayList<>();
@@ -43,7 +40,7 @@ public class HangmanGame {
         return maskared.toString();
     }
 
-    public void guessWordsUI(String word) {
+    public void guessWords(String word) {
         if (totalAttemps < 1) {
             System.out.println("Lose!");
             return;
@@ -55,11 +52,10 @@ public class HangmanGame {
 
         if (attemps.contains(character)) {
             System.out.printf("⚠️ You already tried '%s'. Try another one.", character);
-            guessWordsUI(this.word);
+            guessWords(this.word);
         }
 
         attemps.add(character);
-
         if (isCorrectGuess(character)) {
             System.out.println("Correct!");
         } else {
@@ -68,37 +64,13 @@ public class HangmanGame {
         }
 
         System.out.println(getMaskaredWords(this.word));
-        System.out.printf("\n Your attemps: %s", attemps.toString());
+        System.out.printf("\n Your attemps: %s \n", attemps.toString());
+        System.out.printf("\n Total attemps: %s \n", totalAttemps);
 
-        guessWordsUI(word);
-    }
-
-    public Languages selectLanguageUI() {
-        System.out.println("*-------------- Language --------------*");
-        System.out.println("🌐 Select game language: ");
-
-        Languages[] languages = Languages.values();
-        for (int index = 0; index < languages.length; index++) {
-            System.out.printf("%d) %s \n", index + 1, languages[index].getDescription());
-        }
-
-        System.out.print("Option: ");
-        int option = scanner.nextInt();
-
-        if (option < 1 || option > languages.length) {
-            System.out.println("Invalid option. Try again!");
-            return selectLanguageUI();
-        }
-
-        Languages selected = languages[option - 1];
-        System.out.printf("Language selected: %s \n", selected.getDescription());
-
-
-        System.out.println("*--------------------------------------*");
-        return selected;
+        guessWords(word);
     }
 
     public void start() {
-        guessWordsUI(this.word);
+        guessWords(this.word);
     }
 }
